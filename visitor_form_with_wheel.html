@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exhibition Registration & Lucky Draw</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+    }
+    iframe {
+      width: 100%;
+      max-width: 600px;
+      height: 80vh;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    #wheel-container {
+      display: none;
+      text-align: center;
+      margin-top: 30px;
+    }
+    #wheel {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 5px solid #444;
+      position: relative;
+      overflow: hidden;
+      margin: 20px auto;
+    }
+    .segment {
+      width: 50%;
+      height: 50%;
+      background: #eee;
+      position: absolute;
+      transform-origin: 100% 100%;
+    }
+    .segment:nth-child(1) { background: #ffcc00; transform: rotate(0deg); }
+    .segment:nth-child(2) { background: #ff6666; transform: rotate(45deg); }
+    .segment:nth-child(3) { background: #66ccff; transform: rotate(90deg); }
+    .segment:nth-child(4) { background: #99ff99; transform: rotate(135deg); }
+    .segment:nth-child(5) { background: #ffccff; transform: rotate(180deg); }
+    .segment:nth-child(6) { background: #ff9966; transform: rotate(225deg); }
+    .segment:nth-child(7) { background: #ccccff; transform: rotate(270deg); }
+    .segment:nth-child(8) { background: #ffff99; transform: rotate(315deg); }
+    #wheel button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: none;
+      background: #444;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+    }
+    #result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Exhibition Visitor Registration (전시회 방문자 등록)</h2>
+  <iframe id="googleForm" src="https://docs.google.com/forms/d/e/1FAIpQLSeGR0Q4UpySqc8zpX2vPdSFAeomLOHHRpv1zaO9XTG8uO0GyQ/viewform?embedded=true">Loading…</iframe>
+
+  <div id="wheel-container">
+    <h2>🎉 Lucky Draw / 행운의 룰렛 🎉</h2>
+    <div id="wheel">
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <div class="segment"></div>
+      <button id="spin">Start<br>시작</button>
+    </div>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    // Watch for Google Form submission
+    const iframe = document.getElementById("googleForm");
+    iframe.addEventListener("load", function() {
+      const currentUrl = iframe.contentWindow.location.href;
+      if (currentUrl.includes("formResponse")) {
+        iframe.style.display = "none";
+        document.querySelector("h2").style.display = "none";
+        document.getElementById("wheel-container").style.display = "block";
+      }
+    });
+
+    // Lucky Draw logic
+    const spinBtn = document.getElementById("spin");
+    const wheel = document.getElementById("wheel");
+    const result = document.getElementById("result");
+    const prizes = ["🎁 1st Prize", "🎉 2nd Prize", "⭐ 3rd Prize", "🙏 Thank You", "🙏 Thank You", "🙏 Thank You", "🙏 Thank You", "🙏 Thank You"];
+
+    spinBtn.addEventListener("click", () => {
+      const randomDeg = 3600 + Math.floor(Math.random() * 360);
+      wheel.style.transition = "transform 4s ease-out";
+      wheel.style.transform = `rotate(${randomDeg}deg)`;
+      spinBtn.disabled = true;
+      setTimeout(() => {
+        const index = Math.floor(((randomDeg % 360) / 45));
+        result.textContent = prizes[8 - index === 8 ? 0 : 8 - index];
+        spinBtn.disabled = false;
+      }, 4500);
+    });
+  </script>
+</body>
+</html>
